@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <title>ESA - {% block title %}{% endblock %}</title>
+        <link rel="shortcut icon" href="{{ asset('asset/images/login-logo.png') }}">
+        <link rel="stylesheet" href="{{ asset('asset/css/bootstrap.simplex.min.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}"/>
+        <link rel="stylesheet" href="{{ asset('asset/css/app.css') }}"/>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        <div id="main" class="mb-5">
+            {% include "partials/_header.html.twig" %}
+        </div>
+        <div class="container">
+            <div class="h4 pb-2 mb-4 text-primary fw-bold border-bottom border-primary">
+                ESD-SOFT ARCHIVES - {% block content %}{% endblock %}
+            </div>
+
+            {% block body %}{% endblock %}
+        </div>
+        {# Inclusion du footer dans le template de base avec twig #}
+        <div class="mt-5">
+            {% include "partials/_footer.html.twig" %}
+        </div>
+
+        {% block javascripts %}{% endblock %}
+        <script src="{{ asset('asset/js/all.min.js') }}"></script>
+        <script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}"></script>
+    </body>
+</html>
+

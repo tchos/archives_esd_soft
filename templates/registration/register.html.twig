@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}NOUVEL UTILISATEUR{% endblock %}
+
+{% block content %}NOUVEL UTILISATEUR{% endblock %}
+{% block body %}
+    {{ form_start(registrationForm) }}
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(registrationForm.fullname) }}
+            </div>
+            <div class="col-md">{{ form_row(registrationForm.ministere) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(registrationForm.username) }}</div>
+            <div class="col-md">{{ form_row(registrationForm.telephone) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">
+                {{ form_row(registrationForm.password.first, { label: 'Mot de passe'}) }}
+            </div>
+            <div class="col-md">
+                {{ form_row(registrationForm.password.second, { label: 'Confirmer le mot de passe'}) }}
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(registrationForm.roles) }}</div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md">{{ form_row(registrationForm.agreeTerms) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
+            <span class="fw-bolder">{{ "Créer le compte" }}</span>
+        </button>
+        <button type="reset" class="btn btn-dark btn-sm">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+            <span class="fw-bolder">{{ "Annuler la création" }}</span>
+        </button>
+    {{ form_end(registrationForm) }}
+{% endblock %}
