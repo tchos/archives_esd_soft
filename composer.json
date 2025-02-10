@@ -12,6 +12,7 @@
         "doctrine/doctrine-migrations-bundle": "^3.4",
         "doctrine/migrations": "^3.8",
         "doctrine/orm": "^3.3",
+        "smalot/pdfparser": "^2.11",
         "symfony/asset": "6.4.*",
         "symfony/cache": "6.4.*",
         "symfony/console": "6.4.*",
