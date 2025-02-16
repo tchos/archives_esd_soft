@@ -48,6 +48,9 @@ class Esd
     #[ORM\Column]
     private ?bool $isDeleted = null;
 
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $ministere = null;
+
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un user pour
      * prendre automatiquement sa date de création du compte .
@@ -182,6 +185,18 @@ class Esd
     public function setIsDeleted(bool $isDeleted): static
     {
         $this->isDeleted = $isDeleted;
+
+        return $this;
+    }
+
+    public function getMinistere(): ?string
+    {
+        return $this->ministere;
+    }
+
+    public function setMinistere(?string $ministere): static
+    {
+        $this->ministere = $ministere;
 
         return $this;
     }

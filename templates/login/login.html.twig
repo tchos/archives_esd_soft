@@ -18,12 +18,12 @@
                 {% endif %}
 
                 <div class="row mb-4">
-                    <label for="username"><i class="fas fa-user-alt"></i>  Username</label>
+                    <label for="username" class="mb-2"><i class="fas fa-user-alt me-1"></i>  Nom d'utilisateur</label>
                     <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="username"
                            placeholder="Ex: minfi" required autofocus>
                 </div>
                 <div class="row mb-4">
-                    <label for="password"><i class="fas fa-unlock-alt"></i>  Password</label>
+                    <label for="password" class="mb-2"><i class="fas fa-unlock-alt me-1"></i>  Mot de passe</label>
                     <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password"
                            placeholder="Ex: minfi" required>
                 </div>
@@ -43,8 +43,8 @@
                 #}
 
                 <div class="row">
-                    <button class="btn btn-lg btn-primary btn-sm" type="submit">
-                        Connexion !
+                    <button class="btn btn-lg btn-primary btn-sm fw-bold" type="submit">
+                        <i class="fa-solid fa-right-to-bracket me-2"></i> Connexion !
                     </button>
                 </div>
             </form>

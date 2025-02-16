@@ -1,40 +1,47 @@
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#"><img src="{{ asset('asset/images/logo.png') }}" alt="esd-soft"/></a>
+        <a class="navbar-brand mx-3" href="#"><img src="{{ asset('asset/images/logo.png') }}" alt="esd-soft"/></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarColor01">
             <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#">Home
-                        <span class="visually-hidden">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Features</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Pricing</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Separated link</a>
-                    </div>
-                </li>
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item me-3">
+                        <a class="nav-link active fw-bold" href="{{ path('app_home') }}">
+                            <small><i class="fa-solid fa-magnifying-glass me-1"></i> Rechercher un ESD</small>
+                            <span class="visually-hidden">(current)</span>
+                        </a>
+                    </li>
+                {% endif %}
+                {% if is_granted('ROLE_ADMIN') %}
+                    <li class="nav-item dropdown ms-2">
+                        <a class="nav-link dropdown-toggle active fw-bold" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <small><i class="fa-solid fa-users me-1"></i> Utilisateurs</small>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{{ path('app_register') }}"><small><i class="fa-solid fa-user-plus me-2"></i> Nouveau</small></a>
+                            <a class="dropdown-item" href="#"><small><i class="fa-solid fa-clipboard-list me-2"></i> Liste</small></a>
+                        </div>
+                    </li>
+                {% endif %}
             </ul>
-            <form class="d-flex">
-                <input class="form-control me-sm-2" type="search" placeholder="Search">
-                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            <ul class="navbar-nav me-5">
+                {% if app.user %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active fw-bold" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                            <small><i class="fa-solid fa-user me-1"></i> {{ app.user.fullname }}</small>
+                        </a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#"><small><i class="fa-solid fa-pen-to-square me-1"></i> Modifier profile</small></a>
+                            <a class="dropdown-item" href="#"><small><i class="fa-solid fa-key me-1"></i> Changer mot de passe</small></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}"><small><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Se Déconnecter</small></a>
+                        </div>
+                    </li>
+                {% endif %}
+
+            </ul>
         </div>
     </div>
 </nav>

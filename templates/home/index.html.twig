@@ -1,3 +1,111 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}ACCUEIL{% endblock %}
+
+{% block content %}RECHERCHER UN ESD{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row">
+            {{ form_errors(form.recherche) }}
+            <div class="col-sm-8">
+                {{ form_widget(form.recherche) }}
+            </div>
+            <div class="col-sm">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    <span class="fw-bolder">{{ "Rechercher" }}</span>
+                </button>
+            </div>
+        </div>
+    {{ form_end(form) }}
+
+    {# Si l'ESD recherche est trouve #}
+    {% if esds %}
+        <hr class="my-5 border-primary">
+        <table class="table table-striped table-hover" name="parent">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center">Numéro ESD</th>
+                    <th scope="col" class="text-center">Matricule</th>
+                    <th scope="col" class="text-start">Nom agent</th>
+                    <th scope="col" class="text-center">Date validation</th>
+                    <th scope="col" class="text-center">Version électronique</th>
+                    <th scope="col" class="text-center">Version scannée</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for esd in esds %}
+                    {% set ministere = esd.ministere %}
+                    {% set year = esd.dateesd | date('Y') %}
+                    <tr>
+                        <th scope="row" class="text-center">{{ esd.numesd }}</th>
+                        <td class="text-center">{{ esd.matricule }}</td>
+                        <td class="text-start">{{ esd.nomagent }}</td>
+                        <td class="text-center">{{ esd.dateesd|date('d-m-Y') }}</td>
+                        <td class="text-center">
+                            <a title="Copie électronique de l'ESD numéro {{ esd.numesd }}"
+                               href="{% if esd.FichierElectronique != "" %}
+                                                        {{ asset("asset/archives/" ~ ministere ~ "/" ~ year ~ "/" ~ "/" ~ esd.FichierElectronique ) }}
+                                                        {% else %}
+                                                            {# {{ path('app_decisions_show', {'id': decision.id}) }}  #}
+                                                        {% endif %}">
+                                <img src="{{ asset("asset/images/pdf_file_icon.png") }}" alt="{{ esd.FichierElectronique }}" width="18px">
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a title="Copie scannée de l'ESD numéro {{ esd.numesd }}"
+                               href="{% if esd.FichierScanne != "" %}
+                                                        {{ asset("asset/archives/" ~ ministere ~ "/" ~ year ~ "/" ~ "/" ~ esd.FichierScanne ) }}
+                                                        {% else %}
+                                                            {# {{ path('app_decisions_show', {'id': decision.id}) }}  #}
+                                                        {% endif %}">
+                                <img src="{{ asset("asset/images/pdf_black.jpg") }}" alt="{{ esd.FichierScanne }}" width="22px">
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
+                            <!-- Button to Open the Modal -->
+                            <button href="#" type="button" class="btn btn-sm btn-primary"
+                                    data-bs-toggle="modal" data-bs-target="#editEsd" data-id="{{ esd.id }}">
+                                Supprimer ESD
+                            </button>
+
+                            <!-- La fenêtre modale qui affichera le formulaire -->
+                            <div class="modal" id="editEsd">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+
+                                        <!-- Modal Header -->
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Supprimer un ESD</h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <!-- Modal body -->
+                                        <div class="modal-body text-start">
+                                            Voulez vous supprimer l'ESD numéro {{ esd.numesd }} ?
+                                        </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}

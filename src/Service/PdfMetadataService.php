@@ -91,6 +91,7 @@ class PdfMetadataService
             ->setFichierElectronique($fileElectronique)
             ->setFichierScanne($fileScanne)
             ->setIsDeleted(false)
+            ->setMinistere($data['ministere'])
         ;
 
         try {
