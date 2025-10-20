@@ -37,7 +37,7 @@ class Esd
     private ?\DateTimeInterface $dateesd = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $fichier_electronique = null;
+    private ?string $fichier_valide = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $fichier_scanne = null;
@@ -142,14 +142,14 @@ class Esd
         return $this;
     }
 
-    public function getFichierElectronique(): ?string
+    public function getFichierValide(): ?string
     {
-        return $this->fichier_electronique;
+        return $this->fichier_valide;
     }
 
-    public function setFichierElectronique(?string $fichier_electronique): static
+    public function setFichierValide(?string $fichier_valide): static
     {
-        $this->fichier_electronique = $fichier_electronique;
+        $this->fichier_valide = $fichier_valide;
 
         return $this;
     }

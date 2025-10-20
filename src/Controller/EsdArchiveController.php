@@ -19,7 +19,7 @@ final class EsdArchiveController extends AbstractController
 
         // Traitement des fichiers qui ont les deux versions
         foreach ($filesToSave as $id => $versions) {
-            if (isset($versions['Valide']) && isset($versions['Scanned'])) {
+            if (isset($versions['Valide']) || isset($versions['Scanned'])) {
                 $metadata->enregistrerPdf($versions['Valide'], $versions['Scanned']);
             }
         }

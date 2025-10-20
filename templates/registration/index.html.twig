@@ -1,0 +1,92 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}LISTE DES UTILISATEURS{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/datatables.min.css') }}"/>
+{% endblock %}
+
+{% block content %}LISTE DES UTILISATEURS DU SYSTEME{% endblock %}
+
+{% block body %}
+    <table id="utilisateurs" class="table table-striped table-bordered table-hover mt-4">
+        <thead>
+        <tr class="table-dark">
+            <th>ID</th>
+            <th>{{ "NOM UTILISATEUR"}}</th>
+            <th>{{ "LOGIN" }}</th>
+            <th class="text-center">{{ "MINISTERE" }}</th>
+            <th class="text-center">{{ "TELEPHONE" }}</th>
+            <th class="text-center">{{ "CREE LE" }}</th>
+            <th class="text-center">{{ "CREE PAR" }}</th>
+            <th class="text-center">{{ "DERNIERE CONNEXION" }}</th>
+            <th>{{ "ACTIVF (Y/N)" }}</th>
+            <th class="text-center">{{ "ACTION" }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set i = 1 %}
+        {% for user in users %}
+            <tr>
+                <td>{{ i }}</td>
+                <td>{{ user.fullname }}</td>
+                <td>{{ user.username }}</td>
+                <td class="text-center">{{ user.ministere }}</td>
+                <td class="text-center">{{ user.telephone }}</td>
+                <td class="text-center">{{ user.createdAt | date('Y-m-d') }}</td>
+                <td>{{ user.createdBy == null ? '-':user.createdBy.fullname }}</td>
+                <td class="text-center">{{ user.dateDerniereConnexion | date('Y-m-d') }}</td>
+                <td class="text-center">{{ user.enableYN ? 'OUI':'NON' }}</td>
+                <td class="text-center">
+                    <a href="#" title="{{ 'Réinitialiser le password de ' ~ user.username }}"><i class="fa fa-recycle me-2" aria-hidden="true"></i></a>
+                    <a href="#"
+                       title="{{ user.enableYN ? 'Désactiver ': 'Activer ' }} {{ 'le compte de ' ~ user.username }}">
+                        <i class="fa fa-toggle-off me-1" aria-hidden="true"></i></a>
+                    <a href="#" title="{{ 'Supprimer le compte de ' ~ user.username }}"><i class="fa fa-trash me-1" aria-hidden="true"></i></a>
+                </td>
+            </tr>
+            {% set i = i + 1 %}
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+{% block javascripts %}
+    <script src="{{ asset('asset/js/datatables.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            new DataTable('#utilisateurs', {
+                layout: {
+                    topStart: {
+                        buttons: [
+                            'pageLength',
+                            {
+                                extend: 'copy',
+                                text:      '<span class="">Copier</span>',
+                                titleAttr: 'Copier les données du tableau',
+                                className: 'btn btn-dark btn-sm',
+                            },
+                            {
+                                extend: 'pdf',
+                                text:      '<span class="">PDF</span>',
+                                titleAttr: 'Exporter les données du tableau au format pdf',
+                                className: 'btn btn-dark btn-sm',
+                            },
+                            {
+                                extend: 'excel',
+                                text:      '<span class="">MS Excel</span>',
+                                titleAttr: 'Exporter les données du tableau au format excel',
+                                className: 'btn btn-dark btn-sm',
+                            }
+                        ]
+                    },
+                    bottomStart: 'info',
+                    topEnd: {
+                        search: {
+                            placeholder: 'Filtrer vos données ici'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}

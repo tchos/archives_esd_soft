@@ -86,11 +86,14 @@ class PdfMetadataExtractor
             }
         }
 
-        // Filtrer les fichiers ayant les deux versions
+        // Filtrer les fichiers ayant au moins l'une des deux versions (Si l'on veut les 2 version on remplacera || par &&)
         $matchingFiles = [];
         foreach ($filesGrouped as $group) {
-            if ($group['Scanned'] && $group['Valide']) {
+            if ($group['Scanned']) {
                 $matchingFiles[] = $group['Scanned'];
+            }
+
+            if ($group['Valide']) {
                 $matchingFiles[] = $group['Valide'];
             }
         }
@@ -101,7 +104,7 @@ class PdfMetadataExtractor
             // Extraire l'identifiant unique du fichier (ex: "145456W-00000493")
             if (preg_match('/^(.+?-\d+)(?:\((Scanned)\)|-Valide)\.pdf$/', basename($file), $matches)) {
                 $id = $matches[1]; // Ex: "145456W-00000493"
-                $version = isset($matches[2]) ? "Scanned" : "Valide";// "Scanned" ou "Valide"
+                $version = isset($matches[2]) ? "Scanned" : "Valide"; // "Scanned" ou "Valide"
 
                 // Stocker le fichier selon sa version
                 $documents[$id][$version] = $file;

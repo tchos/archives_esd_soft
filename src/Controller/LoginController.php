@@ -14,13 +14,15 @@ class LoginController extends AbstractController
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, PdfMetadataExtractor $extractor, PdfMetadataService $metadata): Response
     {
-        $filesToSave = $extractor->getMatchingPdfs("/home/tchos/Documents/esdsoft/Bonita_Pdf");
+        $sourceDir = $this->getParameter('esd_source_directory');
+        $filesToSave = $extractor->getMatchingPdfs($sourceDir);
+        //dd($filesToSave);
 
         // Traitement des fichiers qui ont les deux versions
         foreach ($filesToSave as $id => $versions) {
-            if (isset($versions['Valide']) && isset($versions['Scanned'])) {
-                $metadata->enregistrerPdf($versions['Valide'], $versions['Scanned']);
-            }
+            $valide  = $versions['Valide'] ?? null;
+            $scanned = $versions['Scanned'] ?? null;
+            $metadata->enregistrerPdf($valide, $scanned);
         }
 
         // get the login error if there is one

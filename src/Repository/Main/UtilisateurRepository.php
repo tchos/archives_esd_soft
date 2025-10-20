@@ -33,6 +33,16 @@ class UtilisateurRepository extends ServiceEntityRepository implements PasswordU
         $this->getEntityManager()->flush();
     }
 
+    public function save(Utilisateur $user, bool $flush = false): void
+    {
+        $this->_em->persist($user);
+
+        if ($flush) {
+            $this->_em->flush();
+        }
+    }
+
+
     //    /**
     //     * @return Utilisateur[] Returns an array of Utilisateur objects
     //     */

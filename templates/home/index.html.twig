@@ -53,12 +53,12 @@
                         <td class="text-center">{{ esd.dateesd|date('d-m-Y') }}</td>
                         <td class="text-center">
                             <a title="Copie électronique de l'ESD numéro {{ esd.numesd }}"
-                               href="{% if esd.FichierElectronique != "" %}
-                                                        {{ asset("asset/archives/" ~ ministere ~ "/" ~ year ~ "/" ~ "/" ~ esd.FichierElectronique ) }}
+                               href="{% if esd.FichierValide != "" %}
+                                                        {{ asset("asset/archives/" ~ ministere ~ "/" ~ year ~ "/" ~ "/" ~ esd.FichierValide ) }}
                                                         {% else %}
                                                             {# {{ path('app_decisions_show', {'id': decision.id}) }}  #}
                                                         {% endif %}">
-                                <img src="{{ asset("asset/images/pdf_file_icon.png") }}" alt="{{ esd.FichierElectronique }}" width="18px">
+                                <img src="{{ asset("asset/images/pdf_file_icon.png") }}" alt="{{ esd.FichierValide }}" width="18px">
                             </a>
                         </td>
                         <td class="text-center">
