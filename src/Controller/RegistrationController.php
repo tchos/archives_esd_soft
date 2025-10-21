@@ -6,6 +6,8 @@ namespace App\Controller;
 use App\Entity\Main\Utilisateur;
 use App\Entity\Main\Historique;
 use App\Form\RegistrationFormType;
+use App\Form\UpdatePasswordType;
+use App\Form\UpdateProfilType;
 use App\Repository\Main\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -19,7 +21,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class RegistrationController extends AbstractController
 {
     #[IsGranted("ROLE_ADMIN")]
-    #[Route('/register', name: 'app_register')]
+    #[Route('/user/register', name: 'user_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new Utilisateur();
@@ -63,8 +65,6 @@ class RegistrationController extends AbstractController
     public function resetPassword(EntityManagerInterface $entityManager, Request $request, Utilisateur $utilisateur,
                                   UserPasswordHasherInterface $userPasswordHasher): Response
     {
-        // On capte le user connecté
-        $user = $this->getUser();
         // pour l'historisation de l'action
         $history = new Historique();
 
@@ -73,7 +73,7 @@ class RegistrationController extends AbstractController
         $utilisateur->setPassword($hashedPassword);
 
         $history->setTypeAction("RESET")
-            ->setAuteur($user->getUsername())
+            ->setAuteur($this->getUser()->getUsername())
             ->setNature("PASSWORD")
             ->setClef($utilisateur->getUsername())
             ->setDateAction(new \DateTimeImmutable())
@@ -96,12 +96,18 @@ class RegistrationController extends AbstractController
     {
         // pour l'historique de l'action
         $history = new Historique();
-        $user->setEnableYN(false);
 
-        $history->setTypeAction("DELETE")
-            ->setAuteur($this->getUser()->getUsername())
+        if($user->isEnableYN() === false){
+            $user->setEnableYN(true);
+            $history->setTypeAction("ACTIVER");
+        } else {
+            $user->setEnableYN(false);
+            $history->setTypeAction("DESACTIVER");
+        }
+
+        $history->setAuteur($this->getUser()->getUsername())
             ->setNature("COMPTE_USER")
-            ->setClef($form->get('username')->getData())
+            ->setClef($user->getUsername())
             ->setDateAction(new \DateTimeImmutable())
         ;
         // Persistence de l'entité Organismes
@@ -124,7 +130,7 @@ class RegistrationController extends AbstractController
         $history = new Historique();
 
         // constructeur de formulaire de saisie des actes de décès
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(UpdateProfilType::class, $user);
 
         // handlerequest() permet de parcourir la requête et d'extraire les informations du formulaire
         $form->handleRequest($request);
@@ -135,7 +141,6 @@ class RegistrationController extends AbstractController
          */
         if($form->isSubmitted() && $form->isValid())
         {
-            dd("Bonjour");
             $history->setTypeAction("UPDATE")
                 ->setAuteur($this->getUser()->getUsername())
                 ->setNature("COMPTE_USER")
@@ -150,12 +155,69 @@ class RegistrationController extends AbstractController
             // Alerte succès de la mise à jour des informations sur un organisme
             $this->addFlash("warning", "Utilisateur modifié avec succès !");
 
+            if ($this->getUser()->getUsername() !== $user->getUsername()) {
+                return $this->redirectToRoute('user_list');
+            }
             return $this->redirectToRoute('app_logout');
         }
 
         return $this->render('registration/edit.html.twig', [
             'form' => $form->createView(),
             'user' => $user
+        ]);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    //Mise à jour du mot de passe
+    #[Route('/user/changepassword', name: 'user_password_edit')]
+    public function changePassword(UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $manager,
+                                   Request $request): Response
+    {
+        $user = $this->getUser();
+        $history = new Historique();
+
+        $form = $this->createForm(UpdatePasswordType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $old_password = $form->get('old_password')->getData();
+
+            // Si l'ancien mot de passe est le bon
+            if($userPasswordHasher->isPasswordValid($user, $old_password))
+            {
+                $user->setPassword(
+                    $userPasswordHasher->hashPassword(
+                        $user,
+                        $form->get('password')->getData()
+                    )
+                );
+
+                // On enregistre en BD l'action et celui qui l'a exécuté.
+                $history->setTypeAction("UPDATE")
+                    ->setAuteur($this->getUser()->getUsername())
+                    ->setNature("PASSWORD")
+                    ->setClef($form->get('username')->getData())
+                    ->setDateAction(new \DateTimeImmutable())
+                ;
+
+                $manager->persist($user);
+                $manager->persist($history);
+                $manager->flush();
+
+                // Notification du mot de passe modifié
+                $this->addFlash("success", "Mot de passe modifié avec succès !!!");
+
+                // Redirection vers la page de connexion
+                return $this->redirectToRoute('app_logout');
+            }else{
+                // Notification du mot de passe modifié
+                $this->addFlash("danger", "Votre ancien mot de passe n'est pas valide !!!");
+            }
+        }
+
+        return $this->render('registration/change_pwd.html.twig', [
+            'form' => $form->createView(),
+            'user' => $user,
         ]);
     }
 }

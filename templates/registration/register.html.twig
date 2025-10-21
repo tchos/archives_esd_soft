@@ -4,6 +4,13 @@
 
 {% block content %}NOUVEL UTILISATEUR{% endblock %}
 {% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
     {{ form_start(registrationForm) }}
         <div class="row mb-4">
             <div class="col-md-6">
@@ -33,9 +40,9 @@
             <i class="fa fa-check-circle" aria-hidden="true"></i>
             <span class="fw-bolder">{{ "Créer le compte" }}</span>
         </button>
-        <button type="reset" class="btn btn-dark btn-sm">
+        <a type="reset" class="btn btn-dark btn-sm" href="{{ path('user_list') }}">
             <i class="fa fa-times-circle" aria-hidden="true"></i>
             <span class="fw-bolder">{{ "Annuler la création" }}</span>
-        </button>
+        </a>
     {{ form_end(registrationForm) }}
 {% endblock %}

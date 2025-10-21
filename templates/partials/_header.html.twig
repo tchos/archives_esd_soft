@@ -20,7 +20,7 @@
                             <small><i class="fa-solid fa-users me-1"></i> Utilisateurs</small>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ path('app_register') }}"><small><i class="fa-solid fa-user-plus me-2"></i> Nouveau</small></a>
+                            <a class="dropdown-item" href="{{ path('user_register') }}"><small><i class="fa-solid fa-user-plus me-2"></i> Nouveau</small></a>
                             <a class="dropdown-item" href="{{ path('user_list') }}"><small><i class="fa fa-desktop me-2" aria-hidden="true"></i> Liste</small></a>
                         </div>
                     </li>
@@ -33,10 +33,16 @@
                             <small><i class="fa-solid fa-user me-1"></i> {{ app.user.fullname }}</small>
                         </a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="#"><small><i class="fa-solid fa-pen-to-square me-1"></i> Modifier profile</small></a>
-                            <a class="dropdown-item" href="#"><small><i class="fa-solid fa-key me-1"></i> Changer mot de passe</small></a>
+                            <a class="dropdown-item" href="{{ path('user_edit', {'id': app.user.id}) }}">
+                                <small><i class="fa-solid fa-pen-to-square me-1"></i> Modifier profile</small>
+                            </a>
+                            <a class="dropdown-item" href="{{ path('user_password_edit') }}">
+                                <small><i class="fa-solid fa-key me-1"></i> Changer mot de passe</small>
+                            </a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="{{ path('app_logout') }}"><small><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Se Déconnecter</small></a>
+                            <a class="dropdown-item" href="{{ path('app_logout') }}">
+                                <small><i class="fa-solid fa-arrow-right-from-bracket me-1"></i> Se Déconnecter</small>
+                            </a>
                         </div>
                     </li>
                 {% endif %}

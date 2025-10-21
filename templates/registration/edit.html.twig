@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MODIFIER L'UTILISATEUR{% endblock %}
+
+{% block content %}MODIFICATION DU PROFIL DE {{ user.username }}{% endblock %}
+{% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row mb-4">
+            <div class="col-md-6">
+                {{ form_row(form.fullname) }}
+            </div>
+            <div class="col-md">{{ form_row(form.ministere) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(form.username) }}</div>
+            <div class="col-md">{{ form_row(form.telephone) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(form.roles) }}</div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-md">{{ form_row(form.agreeTerms) }}</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
+            <span class="fw-bolder">{{ "Enregistrer les modifications" }}</span>
+        </button>
+        <a type="reset" class="btn btn-dark btn-sm" href="{{ path('user_list') }}">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+            <span class="fw-bolder">{{ "Annuler les modifications" }}</span>
+        </a>
+    {{ form_end(form) }}
+{% endblock %}

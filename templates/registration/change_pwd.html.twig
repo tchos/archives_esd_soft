@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MAJ DU PASSWORD{% endblock %}
+
+{% block content %}MISE A JOUR DU MOT DE PASSE DE {{ user.username }}{% endblock %}
+{% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(form.fullname) }}</div>
+            <div class="col-md">{{ form_row(form.username) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">{{ form_row(form.old_password) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">
+                {{ form_row(form.password.first, { label: 'Mot de passe'}) }}
+            </div>
+            <div class="col-md">
+                {{ form_row(form.password.second, { label: 'Confirmer le mot de passe'}) }}
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm">
+            <i class="fa fa-check-circle" aria-hidden="true"></i>
+            <span class="fw-bolder">{{ "ENREGISTRER LE NOUVEAU MOT DE PASSE" }}</span>
+        </button>
+        <a type="reset" class="btn btn-dark btn-sm" href="{{ path('app_esd_archive') }}">
+            <i class="fa fa-times-circle" aria-hidden="true"></i>
+            <span class="fw-bolder">{{ "ANNULER LE NOUVEAU MOT DE PASSE" }}</span>
+        </a>
+    {{ form_end(form) }}
+
+{% endblock %}

@@ -14,6 +14,7 @@ final class EsdArchiveController extends AbstractController
     #[Route('/esdsoft/archive', name: 'app_esd_archive')]
     public function index(PdfMetadataExtractor $extractor, PdfMetadataService $metadata): Response
     {
+        /**
         $filesToSave = $extractor->getMatchingPdfs("/home/tchos/Documents/esdsoft/Bonita_Pdf");
         //dd($filesToSave);
 
@@ -23,6 +24,7 @@ final class EsdArchiveController extends AbstractController
                 $metadata->enregistrerPdf($versions['Valide'], $versions['Scanned']);
             }
         }
+         **/
 
         return $this->redirectToRoute('app_home');
     }

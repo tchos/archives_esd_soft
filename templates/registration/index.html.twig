@@ -9,6 +9,13 @@
 {% block content %}LISTE DES UTILISATEURS DU SYSTEME{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
     <table id="utilisateurs" class="table table-striped table-bordered table-hover mt-4">
         <thead>
         <tr class="table-dark">
@@ -38,11 +45,59 @@
                 <td class="text-center">{{ user.dateDerniereConnexion | date('Y-m-d') }}</td>
                 <td class="text-center">{{ user.enableYN ? 'OUI':'NON' }}</td>
                 <td class="text-center">
-                    <a href="#" title="{{ 'Réinitialiser le password de ' ~ user.username }}"><i class="fa fa-recycle me-2" aria-hidden="true"></i></a>
-                    <a href="#"
+                    <a href="{{ path('user_edit', {'id': user.id}) }}"
+                       title="{{ 'Modifier le profil de ' ~ user.username }}"><i class="fa fa-eraser me-2" aria-hidden="true"></i></a>
+
+                    <!-- Bouton de reinitialisation du password d'un user -->
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#droppassword{{ user.id }}"
+                       title="Réinitialiser le password de {{ user.username }}"><i class="fa fa-recycle me-2" aria-hidden="true"></i></a>
+                    <!-- Modal -->
+                    <div class="modal fade" id="droppassword{{ user.id }}" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="droppasswordLabel" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#droppassword{{ user.id }}">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="droppasswordLabel">Réinitialisation du mot de passe</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Réinitialiser le mot de passe de <span class ="fw-bolder">{{ user.username }}</span> ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">NON, ANNULER</button>
+                                    <a href="{{ path('user_resetpassword', {'id': user.id}) }}" class="btn btn-primary">
+                                        OUI, RÉINITIALISER
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bouton de desactivation d'un user -->
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#deleteuser{{ user.id }}"
                        title="{{ user.enableYN ? 'Désactiver ': 'Activer ' }} {{ 'le compte de ' ~ user.username }}">
-                        <i class="fa fa-toggle-off me-1" aria-hidden="true"></i></a>
-                    <a href="#" title="{{ 'Supprimer le compte de ' ~ user.username }}"><i class="fa fa-trash me-1" aria-hidden="true"></i></a>
+                        <i class="fa fa-toggle-off me-2" aria-hidden="true"></i></a>
+                    <!-- Modal -->
+                    <div class="modal fade" id="deleteuser{{ user.id }}" data-bs-backdrop="static" data-bs-keyboard="false"
+                         tabindex="-1" aria-labelledby="deleteuserLabel" aria-hidden="true" data-bs-toggle="modal" data-bs-target="#deleteuser{{ user.id }}">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="deleteuserLabel">Suppression d'un compte utilisateur</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Supprimer le compte de <span class ="fw-bolder">{{ user.username }}</span> ?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-dark" data-bs-dismiss="modal">NON, ANNULER</button>
+                                    <a href="{{ path('user_delete', {'id': user.id}) }}" class="btn btn-primary">
+                                        OUI, SUPPRIMER
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
             {% set i = i + 1 %}

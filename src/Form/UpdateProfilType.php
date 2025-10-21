@@ -3,7 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Main\Utilisateur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\CallbackTransformer;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -14,9 +16,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Form\CallbackTransformer;
 
-class RegistrationFormType extends AbstractType
+class UpdateProfilType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -41,47 +42,6 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'placeholder' => "Ex: tchos",
                 ]
-            ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'invalid_message' => 'Les mots de passes ne correspondent',
-                'options' => ['attr' => ['class' => 'password-field']],
-                'required' => true,
-                'first_options'  => [
-                    'label' => 'Mot de passe',
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Le mot de passe ne doit pas être vide',
-                        ]),
-                        new Length([
-                            'min' => 4,
-                            'minMessage' => 'Le password doit avoir au moins {{ limit }} caractères !!!',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 4096,
-                        ]),
-                    ],
-                    'attr' => [
-                        'placeholder' => "Ex: TP#@BKn58Fa66",
-                    ]
-                ],
-                'second_options' => [
-                    'label' => 'Confirmer le mot de passe',
-                    'constraints' => [
-                        new NotBlank([
-                            'message' => 'Le mot de passe ne doit pas être vide',
-                        ]),
-                        new Length([
-                            'min' => 4,
-                            'minMessage' => 'Le password doit avoir au moins {{ limit }} caractères !!!',
-                            // max length allowed by Symfony for security reasons
-                            'max' => 4096,
-                        ]),
-                    ],
-                    'attr' => [
-                        'placeholder' => "Ex: TP#@BKn58Fa66",
-                    ]
-                ],
-                'attr' => ['autocomplete' => 'new-password'],
             ])
             ->add('fullname', TextType::class, [
                 'label' => "Nom complet",
