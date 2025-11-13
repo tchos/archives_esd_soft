@@ -25,11 +25,14 @@ class RechercherESD
                 $recherche = '
                     SELECT e
                     FROM App\Entity\Main\Esd e
-                    WHERE (e.matricule LIKE :mot_clef'.$i.' OR e.numesd LIKE :mot_clef'.$i.')
+                    WHERE (e.matricule LIKE :mot_clef'.$i.' 
+                            OR e.numesd LIKE :mot_clef'.$i.'
+                            OR e.nomagent LIKE :mot_clef'.$i.')
                 ';
             } else {
                 $recherche .= ' AND (e.matricule LIKE :mot_clef'.$i.'
-                    OR e.numesd LIKE :mot_clef'.$i.')';
+                    OR e.numesd LIKE :mot_clef'.$i.'
+                    OR e.nomagent LIKE :mot_clef'.$i.')';
             }
         }
 

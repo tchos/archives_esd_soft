@@ -58,18 +58,18 @@
                                                         {% else %}
                                                             {# {{ path('app_decisions_show', {'id': decision.id}) }}  #}
                                                         {% endif %}">
-                                <img src="{{ asset("asset/images/pdf_file_icon.png") }}" alt="{{ esd.FichierValide }}" width="18px">
+                                <img src="{{ asset("asset/images/pdf_file_icon.png") }}" alt="{{ esd.FichierValide }}" width="20px">
                             </a>
                         </td>
                         <td class="text-center">
-                            <a title="Copie scannée de l'ESD numéro {{ esd.numesd }}"
-                               href="{% if esd.FichierScanne != "" %}
-                                                        {{ asset("asset/archives/" ~ ministere ~ "/" ~ year ~ "/" ~ "/" ~ esd.FichierScanne ) }}
-                                                        {% else %}
-                                                            {# {{ path('app_decisions_show', {'id': decision.id}) }}  #}
-                                                        {% endif %}">
-                                <img src="{{ asset("asset/images/pdf_black.jpg") }}" alt="{{ esd.FichierScanne }}" width="22px">
-                            </a>
+                            {% if esd.FichierScanne != "" %}
+                                <a title="Copie scannée de l'ESD numéro {{ esd.numesd }}"
+                                        href="{{ asset("asset/archives/" ~ ministere ~ "/" ~ year ~ "/" ~ "/" ~ esd.FichierScanne ) }}">
+                                        <img src="{{ asset("asset/images/pdf-icon.png") }}" alt="{{ esd.FichierScanne }}" width="22px">
+                                </a>
+                            {% else %}
+                                <img src="{{ asset("asset/images/pdf-icon-trans.png") }}" title="Le fichier scanné est indisponible" width="22px">
+                            {% endif %}
                         </td>
                         <td class="text-center">
                             {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
