@@ -1,0 +1,86 @@
+@startuml
+left to right direction
+skinparam packageStyle rect
+skinparam usecase {
+  BackgroundColor #F8F8FF
+  BorderColor #000000
+}
+
+
+actor "Utilisateur\n(ROLE_USER)" as User
+actor "Administrateur\n(ROLE_ADMIN)" as Admin
+actor "Système (job)\nAuto-archive" as SystemJob
+
+rectangle "Application Archives ESD" {
+  usecase "UC-010\nModifier le profil" as UC010
+  usecase "UC-011\nChanger mot de passe" as UC011
+
+  usecase "UC-020\nRechercher un ESD" as UC020
+  usecase "UC-021\nRechercher un ESD par n° ESD" as UC021
+  usecase "UC-022\nRechercher un ESD par matricule" as UC022
+  usecase "UC-023\nRechercher un ESD par nom d'agent" as UC023
+
+  usecase "UC-030\nConsulter un ESD" as UC030
+  usecase "UC-031\nTélécharger PDF validé" as UC031
+  usecase "UC-032\nTélécharger PDF scanné signé" as UC032
+
+  usecase "UC-100\nGérer les utilisateurs" as UC100
+  usecase "UC-101\nLister tous les utilisateurs" as UC101
+  usecase "UC-102\nActiver / Désactiver" as UC102
+  usecase "UC-103\nModifier rôles" as UC103
+  usecase "UC-104\nRéinitialiser mot de passe" as UC104
+
+  ' Optionnel : cas techniques
+  usecase "UC-200\nImporter ESD" as UC200
+  usecase "UC-201\nArchiver ESD (job)" as UC201
+}
+
+User --> UC010
+User --> UC011
+
+User --> UC020
+User --> UC021
+User --> UC022
+User --> UC023
+User --> UC030
+User --> UC031
+User --> UC032
+
+' Admin has all user rights + administration
+Admin --> UC100
+Admin --> UC101
+Admin --> UC102
+Admin --> UC103
+Admin --> UC104
+
+Admin --> UC020
+Admin --> UC021
+Admin --> UC022
+Admin --> UC023
+Admin --> UC030
+Admin --> UC031
+Admin --> UC032
+
+' System job
+SystemJob --> UC200
+SystemJob --> UC201
+
+' Include / Extend relations
+UC020 ..> UC030 : <<include>>  ' rechercher -> peut conduire à consulter
+UC020 .> UC021 : <<extend>>  ' recherche spécialisée
+UC020 .> UC022 : <<extend>>
+UC020 .> UC023 : <<extend>>
+
+UC030 ..> UC031 : <<include>>  ' consultation permet téléchargement
+UC030 ..> UC032 : <<include>>
+
+UC100 .> UC101 : <<extend>>
+UC100 .> UC102 : <<extend>>
+UC100 .> UC103 : <<extend>>
+UC100 .> UC104 : <<extend>>
+UC100 .> UC105 : <<extend>>
+
+' Import can trigger archiving
+UC200 .> UC201 : <<extend>>
+
+@enduml

@@ -1,0 +1,59 @@
+@startuml WorkflowRechercheComplet
+
+title Workflow Complet de Recherche ESD
+
+actor "Utilisateur" as User
+participant "Navigateur" as Browser
+participant "EsdController" as Controller
+participant "EsdRepository" as Repository
+participant "PostgreSQL" as DB
+participant "Twig" as View
+
+== Recherche Initiale ==
+
+User -> Browser: Accès /esd/search
+Browser -> Controller: GET /esd/search
+activate Controller
+
+Controller -> View: render('esd/search.html.twig')
+activate View
+View -> Browser: Formulaire de recherche
+deactivate View
+deactivate Controller
+
+Browser -> User: Affichage formulaire
+
+== Soumission Recherche ==
+
+User -> Browser: Remplit critères\n+ Submit
+Browser -> Controller: POST /esd/search\n(critères)
+activate Controller
+
+alt Données Valides
+    Controller -> Repository: searchByCriteria(critères)
+    activate Repository
+    
+    Repository -> DB: SELECT avec filtres\n(numESD, matricule, nom, etc.)
+    activate DB
+    DB -> Repository: Liste ESDs correspondants
+    deactivate DB
+    
+    Repository -> Controller: Collection<Esd>
+    deactivate Repository
+    
+    Controller -> View: render('esd/search.html.twig', \n{esds: results, form: form})
+    activate View
+    View -> Browser: Page avec résultats
+    deactivate View
+    
+else Données Invalides
+    Controller -> View: render('esd/search.html.twig', \n{form: form})
+    activate View
+    View -> Browser: Formulaire avec erreurs
+    deactivate View
+end
+
+deactivate Controller
+Browser -> User: Affichage résultats/erreurs
+
+@enduml

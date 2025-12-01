@@ -68,7 +68,7 @@ class RegistrationController extends AbstractController
         // pour l'historisation de l'action
         $history = new Historique();
 
-        $plainPassword = 'aaaaabbbbb';
+        $plainPassword = 'bpm';
         $hashedPassword = $userPasswordHasher->hashPassword($utilisateur, $plainPassword);
         $utilisateur->setPassword($hashedPassword);
 

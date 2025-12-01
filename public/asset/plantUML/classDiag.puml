@@ -1,0 +1,36 @@
+@startuml
+' Diagramme de classes pour Archives ESD
+class Esd {
+  +id: int
+  +numesd: string(32)
+  +matricule: string(8)
+  +nomagent: string
+  +codepaiement: string(4)
+  +montant: int
+  +dateesd: Date
+  +fichier_valide: string
+  +fichier_scanne: string
+  +date_archivage_auto: DateTime
+  +isDeleted: bool
+  +ministere: string(32)
+}
+
+class Utilisateur {
+  +id: int
+  +username: string(180)
+  +roles: array
+  +password: string
+  +fullname: string
+  +telephone: string(32)
+  +ministere: string(64)
+  +createdAt: DateTimeImmutable
+  +IsPasswordModified: bool
+  +dateDerniereConnexion: DateTime
+  +enableYN: bool
+}
+
+' Relations
+Utilisateur "1" -- "*" Utilisateur : createdBy / utilisateurs
+Esd .. Utilisateur : (optionnel) archivedBy
+
+@enduml

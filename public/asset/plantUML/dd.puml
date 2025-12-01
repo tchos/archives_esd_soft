@@ -1,0 +1,62 @@
+@startuml
+' Modèle conceptuel de données - Archives ESD
+
+entity "ESD" as ESD {
+  * id : bigint <<PK>>
+  --
+  numesd : varchar(32)
+  matricule : varchar(8)
+  nomagent : varchar(255)
+  codepaiement : varchar(4)
+  montant : integer
+  dateesd : date
+  fichier_valide : varchar
+  fichier_scanne : varchar
+  date_archivage_auto : timestamp
+  isDeleted : boolean
+  ministere : varchar(32)
+  --
+  {unique} numesd, matricule
+}
+
+entity "UTILISATEUR" as USER {
+  * id : bigint <<PK>>
+  --
+  username : varchar(180)
+  roles : text
+  password : varchar
+  fullname : varchar(255)
+  telephone : varchar(32)
+  ministere : varchar(64)
+  createdAt : timestamp
+  IsPasswordModified : boolean
+  dateDerniereConnexion : timestamp
+  enableYN : boolean
+  --
+  {unique} username
+}
+
+' Optional entities
+entity "MINISTERE (optionnel)" as MIN {
+  * id_min : bigint <<PK>>
+  code_min : varchar(32)
+  nom : varchar(128)
+}
+
+entity "FICHIER_ESD (optionnel)" as FILE {
+  * id_file : bigint <<PK>>
+  type : varchar(32)
+  path : varchar
+  created_at : timestamp
+}
+
+' Relations
+USER ||--o{ USER : "createdBy / utilisateurs"
+ESD }o--|| USER : "optionnel: archivedBy"
+MIN ||--o{ USER : "1..* ↔ users"
+MIN ||--o{ ESD : "1..* ↔ esd"
+
+' If FILE used:
+ESD ||--o{ FILE : "1..* ↔ fichiers"
+
+@enduml
