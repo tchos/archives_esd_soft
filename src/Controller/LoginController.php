@@ -23,6 +23,7 @@ class LoginController extends AbstractController
             $valide  = $versions['Valide'] ?? null;
             $scanned = $versions['Scanned'] ?? null;
             $metadata->enregistrerPdf($valide, $scanned);
+            $metadata->clearEntityManager();
         }
 
         // get the login error if there is one

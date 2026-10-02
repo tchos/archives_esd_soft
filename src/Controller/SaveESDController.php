@@ -22,6 +22,8 @@ final class SaveESDController extends AbstractController
             $valide  = $versions['Valide'] ?? null;
             $scanned = $versions['Scanned'] ?? null;
             $metadata->enregistrerPdf($valide, $scanned);
+            $this->metadataService->clearEntityManager();
+
         }
 
         return new Response('', Response::HTTP_OK);

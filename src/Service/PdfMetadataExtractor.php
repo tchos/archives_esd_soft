@@ -14,19 +14,25 @@ class PdfMetadataExtractor
      */
     public function extraireMetadonnees(string $cheminFichier): array
     {
-        $parser = new Parser();
-        $pdf = $parser->parseFile($cheminFichier);
-        $details = $pdf->getDetails();
+        try {
+            $parser = new Parser();
+            $pdf = $parser->parseFile($cheminFichier);
+            $details = $pdf->getDetails();
 
-        return [
-            'matricule' => $details['MATRICULE'] ?? 'Inconnu',
-            'nom' => $details['NOM'] ?? 'Inconnu',
-            'dateCreation' => $details['DATECREATION'] ?? 'Inconnu',
-            'anneeEsd' => $details['ANNEE'] ?? 'Inconnu',
-            'ministere' => $details['MINISTERE'] ?? 'Inconnu',
-            'date_creation' => isset($details['CreationDate']) ? new \DateTime($details['CreationDate']) : new \DateTime(),
-            'version' => $details['Version'] ?? 'Inconnu',
-        ];
+            return [
+                'matricule' => $details['MATRICULE'] ?? 'Inconnu',
+                'nom' => $details['NOM'] ?? 'Inconnu',
+                'dateCreation' => $details['DATECREATION'] ?? 'Inconnu',
+                'anneeEsd' => $details['ANNEE'] ?? 'Inconnu',
+                'ministere' => $details['MINISTERE'] ?? 'Inconnu',
+                'date_creation' => isset($details['CreationDate']) ? new \DateTime($details['CreationDate']) : new \DateTime(),
+                'version' => $details['Version'] ?? 'Inconnu',
+            ];
+        }catch (\Throwable $e) {
+            // PDF invalide ou corrompu
+            return [];
+        }
+
         /**
          *"ANNEE" => "2025"
          * "Author" => "Théophile Nanne Mbende"

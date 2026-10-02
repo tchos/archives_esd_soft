@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository;
+namespace App\Repository\Main;
 
 use App\Entity\Aigles;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;

@@ -6,4 +6,6 @@
 /public/bundles/
 /var/
 /vendor/
+*.pdf
+/public/asset/archives
 ###< symfony/framework-bundle ###

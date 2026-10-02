@@ -63,7 +63,12 @@ class PdfMetadataService
         //$paiement = $this->repos->findByMatriculeAndNumesd($matricule, $numesd);
 
         // Extraction des métadonnées du fichier "Valide"
-        $data = $this->pdfMetadataExtractor->extraireMetadonnees($cheminValide);
+        if ($cheminValide && file_exists($cheminValide)) {
+            $data = $this->pdfMetadataExtractor->extraireMetadonnees($cheminValide);
+        } else {
+            $data = []; // PAS de parsing
+        }
+
         $fileElectronique = null;
         $fileScanne = null;
 
@@ -113,6 +118,57 @@ class PdfMetadataService
 
         // Demarrage de la transaction
         $this->entityManager->beginTransaction();
+        try {
+
+            if ($existing) {
+                // 🔁 UPDATE
+                $updated = false;
+
+                if ($fileElectronique && $existing->getFichierValide() !== $fileElectronique) {
+                    $existing->setFichierValide($fileElectronique);
+                    $updated = true;
+                }
+
+                if ($fileScanne && $existing->getFichierScanne() !== $fileScanne) {
+                    $existing->setFichierScanne($fileScanne);
+                    $updated = true;
+                }
+
+                if ($updated) {
+                    $existing->setDateArchivageAuto(new \DateTime());
+                    $this->entityManager->persist($existing);
+                }
+
+            } else {
+                // ➕ INSERT
+                $esd = new Esd();
+                $esd->setNumesd($numesd)
+                    ->setMatricule($matricule)
+                    ->setNomagent($data['nom'] ?? 'INCONNU')
+                    ->setDateesd($data['date_creation'] ?? new \DateTime())
+                    ->setFichierValide($fileElectronique)
+                    ->setFichierScanne($fileScanne)
+                    ->setIsDeleted(false)
+                    ->setMinistere($data['ministere'] ?? null)
+                ;
+
+                $this->entityManager->persist($esd);
+            }
+
+            $this->entityManager->flush();
+            $this->entityManager->commit();
+
+        } catch (UniqueConstraintViolationException $e) {
+
+            $this->entityManager->rollback();
+            $this->managerRegistry->resetManager();
+
+            if (php_sapi_name() === 'cli') {
+                echo "Erreur: L'ESD $numesd a déjà été archivé pour le matricule $matricule".PHP_EOL;
+            } else {
+                error_log("Erreur: L'ESD $numesd a déjà été archivé pour le matricule $matricule");
+            }
+        }
         if($existing){
             $updated = false;
             if($fileElectronique && $existing->getFichierValide() !== $fileElectronique){
@@ -177,4 +233,10 @@ class PdfMetadataService
             'nomFichier' => $file,
         ];
     }
+
+    public function clearEntityManager()
+    {
+        $this->entityManager->clear();
+    }
+
 }
