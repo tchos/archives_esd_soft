@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvel ESD Manuel{% endblock %}
+
+{% block content %}Enregistrer un nouvel ESD Manuel{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        <div class="row mb-4">
+            <div class="col-md-3">{{ form_row(form.type) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(form.matricule) }}</div>
+            <div class="col-md">{{ form_row(form.numero) }}</div>
+            <div class="col-md">{{ form_row(form.montant) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md">{{ form_row(form.service) }}</div>
+            <div class="col-md">{{ form_row(form.date_signature) }}</div>
+            <div class="col-md">{{ form_row(form.signataire) }}</div>
+        </div>
+        <div class="row mb-4">
+            <div class="col-sm-3">{{ form_row(form.copie_scannee_file) }}</div>
+        </div>
+    <hr>
+
+    <button type="submit" class="btn btn-sm btn-primary">
+        <i class="fa fa-upload" aria-hidden="true"></i> Enregistrer
+    </button>
+    <a href="{{ path('app_esd_manuel_search') }}" class="btn btn-sm btn-dark">
+        <i class="fa fa-reply-all" aria-hidden="true"></i> Retour
+    </a>
+
+    {{ form_end(form) }}
+{% endblock %}

@@ -7,5 +7,5 @@
 /var/
 /vendor/
 *.pdf
-/public/asset/archives
+/public/asset/archives/*
 ###< symfony/framework-bundle ###

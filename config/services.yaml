@@ -6,12 +6,15 @@
 parameters:
     esd_archives_directory: '%kernel.project_dir%/public/asset/archives'
     esd_source_directory: '%env(ESD_SOURCE_DIR)%'
+    esd_manuels_directory: '%env(ESD_MANUEL_SOURCE_DIR)%'
 
 services:
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            string $esdManuelsDirectory: '%esd_manuels_directory%'
 
     # Par KWETTE pour gerer la date de derniere connexion d'un user
     security_listener:

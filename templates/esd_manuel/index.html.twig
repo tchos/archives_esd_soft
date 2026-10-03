@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ACCUEIL{% endblock %}
+
+{% block content %}RECHERCHER UN ESD MANUEL{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+    <div class="row">
+        {{ form_errors(form.recherche) }}
+        <div class="col-sm-8">
+            {{ form_widget(form.recherche) }}
+        </div>
+        <div class="col-sm">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-check-circle" aria-hidden="true"></i>
+                <span class="fw-bolder">{{ "Rechercher" }}</span>
+            </button>
+        </div>
+    </div>
+    {{ form_end(form) }}
+
+    {# Si l'ESD recherche est trouve #}
+    {% if esds %}
+        <hr class="my-5 border-primary">
+        <table class="table table-striped table-hover" name="parent">
+            <thead>
+            <tr>
+                <th scope="col" class="text-center">Numéro</th>
+                <th scope="col" class="text-center">Matricule</th>
+                <th scope="col" class="text-start">Montant</th>
+                <th scope="col" class="text-start">Service</th>
+                <th scope="col" class="text-center">Date signature</th>
+                <th scope="col" class="text-center">Signataire</th>
+                <th scope="col" class="text-center">Type</th>
+                <th scope="col" class="text-center">Copie scannée</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for esd in esds %}
+                {% set service = esd.service %}
+                {% set year = esd.dateSignature | date('Y') %}
+                <tr>
+                    <th scope="row" class="text-center">{{ esd.numero }}</th>
+                    <td class="text-center">{{ esd.matricule }}</td>
+                    <td class="text-start">{{ esd.montant | number_format(0,'.',' ') }}</td>
+                    <td class="text-start">{{ esd.service }}</td>
+                    <td class="text-center">{{ esd.dateSignature|date('d-m-Y') }}</td>
+                    <td class="text-start">{{ esd.signataire }}</td>
+                    <td class="text-start">{{ esd.type }}</td>
+                    <td class="text-center">
+                        {% if esd.copieScannee %}
+                            <a href="{{ path('app_esd_manuel_download', {id: esd.id}) }}"
+                               target="_blank" class="btn btn-sm btn-outline-primary">
+                                <img src="{{ asset("asset/images/pdf-icon.png") }}" alt="{{ esd.copieScannee }}" width="22px">
+                            </a>
+                        {% else %}
+                            <img src="{{ asset("asset/images/pdf-icon-trans.png") }}" title="Le fichier scanné est indisponible" width="22px">
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}
