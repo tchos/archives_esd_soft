@@ -27,7 +27,6 @@ class EsdManuelType extends AbstractType
             'S3' => 'S3',
             'S5' => 'S5',
             'S6' => 'S6',
-            'CAFS' => 'CAFS',
         ];
 
         $builder
