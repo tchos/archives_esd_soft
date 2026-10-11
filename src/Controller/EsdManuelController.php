@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Main\EsdManuel;
 use App\Form\EsdManuelType;
-use App\Form\Main\EsdManuelSearchType;
+use App\Form\EsdManuelSearchType;
 use App\Repository\Main\EsdManuelRepository;
 use App\Service\EsdManuelFileUploader;
 use App\Service\RechercherESD;

@@ -21,7 +21,7 @@ class EsdManuel
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 7)]
+    #[ORM\Column(length: 8, nullable: true)]
     #[Assert\Regex(
         pattern:"/(^[A-Z][0-9]{6}$)|(^[0-9]{5,6}[A-Z]$)/",
         message:"Le matricule {{ value }} n'est pas un matricule valide."
@@ -56,7 +56,7 @@ class EsdManuel
         maxMessage: "Le nom du signataire doit avoir au maximum {{ limit }} caractères"
     )]
     #[Assert\Regex(
-        pattern: "/^([A-Z])+$/",
+        pattern: "/^[A-Z' -]+$/",
         message: "Le nom du signataire doit être en majuscule"
     )]
     private ?string $signataire = null;
@@ -66,6 +66,9 @@ class EsdManuel
 
     #[ORM\Column(length: 16)]
     private ?string $type = null;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $nom = null;
 
     public function getId(): ?int
     {
@@ -166,5 +169,38 @@ class EsdManuel
         $this->type = $type;
 
         return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(?string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Retourne l'identifiant à utiliser pour le nommage du fichier :
+     * le matricule s'il est rempli, sinon le nom.
+     */
+    public function getIdentifiant(): ?string
+    {
+        if ($this->matricule !== null && $this->matricule !== '') {
+            return $this->matricule;
+        }
+
+        return $this->nom;
+    }
+
+    /**
+     * Indique si l'ESD est identifié par un matricule (true) ou un nom (false).
+     */
+    public function isIdentifieParMatricule(): bool
+    {
+        return $this->matricule !== null && $this->matricule !== '';
     }
 }

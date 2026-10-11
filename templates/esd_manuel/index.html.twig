@@ -34,7 +34,7 @@
             <thead>
             <tr>
                 <th scope="col" class="text-center">Numéro</th>
-                <th scope="col" class="text-center">Matricule</th>
+                <th scope="col" class="text-center">Matricule / Nom</th>
                 <th scope="col" class="text-start">Montant</th>
                 <th scope="col" class="text-start">Service</th>
                 <th scope="col" class="text-center">Date signature</th>
@@ -49,9 +49,17 @@
                 {% set year = esd.dateSignature | date('Y') %}
                 <tr>
                     <th scope="row" class="text-center">{{ esd.numero }}</th>
-                    <td class="text-center">{{ esd.matricule }}</td>
+                    <td class="text-center">
+                        {% if esd.matricule %}
+                            {{ esd.matricule }}
+                        {% elseif esd.nom %}
+                            {{ esd.nom }}
+                        {% else %}
+                            <span class="text-muted fst-italic">—</span>gi
+                        {% endif %}
+                    </td>
                     <td class="text-start">{{ esd.montant | number_format(0,'.',' ') }}</td>
-                    <td class="text-start">{{ esd.service }}</td>
+                    <td class="text-center">{{ esd.service }}</td>
                     <td class="text-center">{{ esd.dateSignature|date('d-m-Y') }}</td>
                     <td class="text-start">{{ esd.signataire }}</td>
                     <td class="text-start">{{ esd.type }}</td>

@@ -62,11 +62,13 @@ class RechercherESD
                     SELECT e
                     FROM App\Entity\Main\EsdManuel e
                     WHERE (e.matricule LIKE :mot_clef'.$i.' 
+                            OR e.nom LIKE :mot_clef'.$i.' 
                             OR e.numero LIKE :mot_clef'.$i.'
                             OR e.signataire LIKE :mot_clef'.$i.')
                 ';
             } else {
                 $recherche .= ' AND (e.matricule LIKE :mot_clef'.$i.'
+                    OR e.nom LIKE :mot_clef'.$i.' 
                     OR e.numero LIKE :mot_clef'.$i.'
                     OR e.signataire LIKE :mot_clef'.$i.')';
             }

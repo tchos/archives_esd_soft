@@ -10,17 +10,23 @@
     {% endfor %}
 
     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        <fieldset class="mb-3">
+            <legend>Identification</legend>
+            {{ form_row(form.type_identification) }}
+        </fieldset>
+        <hr>
         <div class="row mb-4">
             <div class="col-md-3">{{ form_row(form.type) }}</div>
         </div>
         <div class="row mb-4">
-            <div class="col-md">{{ form_row(form.matricule) }}</div>
-            <div class="col-md">{{ form_row(form.numero) }}</div>
-            <div class="col-md">{{ form_row(form.montant) }}</div>
+            <div class="col-md-3">{{ form_row(form.service) }}</div>
+            <div class="col-md-3">{{ form_row(form.numero) }}</div>
+            <div class="col-md" id="col-matricule">{{ form_row(form.matricule) }}</div>
+            <div class="col-md" id="col-nom">{{ form_row(form.nom) }}</div>
         </div>
         <div class="row mb-4">
-            <div class="col-md">{{ form_row(form.service) }}</div>
-            <div class="col-md">{{ form_row(form.date_signature) }}</div>
+            <div class="col-md-3">{{ form_row(form.montant) }}</div>
+            <div class="col-md-3">{{ form_row(form.date_signature) }}</div>
             <div class="col-md">{{ form_row(form.signataire) }}</div>
         </div>
         <div class="row mb-4">
@@ -36,4 +42,40 @@
     </a>
 
     {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const radios = document.querySelectorAll(
+                'input[type="radio"][name$="[type_identification]"], ' +
+                'input[type="radio"][name="type_identification"]'
+            );
+            const colMatricule = document.getElementById('col-matricule');
+            const colNom       = document.getElementById('col-nom');
+
+            if (!colMatricule || !colNom || radios.length === 0) {
+                console.warn('ESDManuel: éléments du formulaire introuvables', {
+                    colMatricule: !!colMatricule,
+                    colNom: !!colNom,
+                    radios: radios.length,
+                });
+                return;
+            }
+
+            function update() {
+                const checked = document.querySelector(
+                    'input[type="radio"][name$="[type_identification]"]:checked, ' +
+                    'input[type="radio"][name="type_identification"]:checked'
+                );
+                const mode = checked ? checked.value : 'matricule';
+
+                colMatricule.style.display = (mode === 'matricule') ? '' : 'none';
+                colNom.style.display       = (mode === 'nom')       ? '' : 'none';
+            }
+
+            radios.forEach(r => r.addEventListener('change', update));
+            update();
+        });
+    </script>
 {% endblock %}

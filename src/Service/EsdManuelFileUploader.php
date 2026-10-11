@@ -21,18 +21,17 @@ class EsdManuelFileUploader
      */
     public function upload(UploadedFile $file, EsdManuel $esdManuel): string
     {
-        $matricule    = (string) $esdManuel->getMatricule();
-        $numero       = (string) $esdManuel->getNumero();
-        $date         = $esdManuel->getDateSignature();
-        $dateString   = $date?->format('Ymd') ?? date('Ymd');
-        $annee        = $date?->format('Y') ?? date('Y');
-        $service      = (string) $esdManuel->getService();
+        $identifiant = (string) $esdManuel->getIdentifiant(); // ✅ matricule OU nom
+        $numero      = (string) $esdManuel->getNumero();
+        $date        = $esdManuel->getDateSignature();
+        $dateString  = $date?->format('Ymd') ?? date('Ymd');
+        $annee       = $date?->format('Y') ?? date('Y');
+        $service     = (string) $esdManuel->getService();
 
-        // Nom du fichier : matricule_numero_dateSignature.pdf
-        $baseName = sprintf('%s_%s_%s', $matricule, $numero, $dateString);
+        // Nom du fichier : [matricule|nom]_numero_dateSignature.pdf
+        $baseName = sprintf('%s_%s_%s', $identifiant, $numero, $dateString);
         $safeName = preg_replace('/[^A-Za-z0-9_\-]/', '_', $baseName);
         $fileName = $safeName . '.pdf';
-
 
         // Dossier cible : .../archives/{service}/{année}/
         $serviceDir = preg_replace('/[^A-Za-z0-9_\-]/', '_', $service);

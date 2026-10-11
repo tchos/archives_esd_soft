@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Main;
+namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -13,9 +13,10 @@ class EsdManuelSearchType extends AbstractType
     {
         $builder
             ->add('recherche', TextType::class, [
-                'label' => 'Matricule ou Numéro de l\'ESD manuel',
+                'label' => 'Matricule ou Nom ou Numéro ou Date de signature de l\'ESD manuel',
                 'attr' => [
-                    'placeholder' => 'Rechercher un ESD manuel via le matricule (EX: A123456) ou via son numéro (EX: 00000468)'
+                    'placeholder' => 'Rechercher un ESD manuel via le matricule (EX: A123456) 
+                    ou le nom (EX: TCHOS) ou le numéro (EX: 00000468) ou le date de signature de l\'ESD manuel'
                 ]
             ])
         ;

@@ -21,6 +21,34 @@ class EsdManuelRepository extends ServiceEntityRepository
      *
      * @return EsdManuel[]
      */
+    public function search(?string $q): array
+    {
+        $q = trim((string) $q);
+        if ($q === '') {
+            return [];
+        }
+
+        $tokens = preg_split('/\s+/', $q);
+
+        $qb = $this->createQueryBuilder('e');
+
+        foreach ($tokens as $i => $token) {
+            $qb->andWhere(
+                $qb->expr()->orX(
+                    'LOWER(e.matricule) LIKE :t' . $i,
+                    'LOWER(e.nom)       LIKE :t' . $i,
+                    'e.numero           LIKE :t' . $i
+                )
+            )
+                ->setParameter('t' . $i, '%' . mb_strtolower($token) . '%');
+        }
+
+        return $qb->orderBy('e.date_signature', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
     public function search(?string $matricule = null, ?string $numero = null): array
     {
         $qb = $this->createQueryBuilder('e');
@@ -46,6 +74,7 @@ class EsdManuelRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+     **/
 
     //    /**
     //     * @return EsdManuel[] Returns an array of EsdManuel objects
